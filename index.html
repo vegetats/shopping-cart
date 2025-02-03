@@ -9,32 +9,35 @@
     <h1 class="tittle">Carrinho de compras</h1>
     <div class="dashboard">
 
-        <div class="dashboard-select__products">
-            <h2 class="tittle">Produto</h2>
-            <select name="Produto" id="select-items">
-                <option value="">Batata Lavada</option>
-                <option value="">Manga</option>
-                <option value="">Brocolis</option>
-                <option value="">Cenoura</option>
-            </select>
+        <div class="dashboard-select">
 
-            <div class="dashboard-select__products__amount">
+            <div class="dashboard-select__items">
+                <h2 class="tittle">Produto</h2>
+                <select name="Produto" id="select-items">
+                    <option value="">Batata Lavada</option>
+                    <option value="">Manga</option>
+                    <option value="">Brocolis</option>
+                    <option value="">Cenoura</option>
+                </select>
+            </div>
+            
+            <div class="dashboard-select-items__amount">
                 <h2 class="title">Quantidade</h2>
                 <input id="input-amount" class="dashboard-input_amount" type="number">
             </div>
 
             <div class="dashboard-buttons">
-                <button id="button-add" class="dashboard-button"></button>
-                <button id="button-clean" class="dashboard-button" class="dashboard-button-disabled"></button>
+                <button id="button-add" class="dashboard-button-add" class="dashboard-button-add__disabled">Adicionar</button>
+                <button id="button-clean" class="dashboard-button-clean" class="dashboard-button-clean__disabled">Limpar</button>
             </div>
                 
             
         </div>
         
-        <div class="dashboard-items__value">
-            <h2 class="dashboard-tittle">Produtos no carrinho</h2>
-            <p id="products-on-hold" class="dashboard-items__list"></p>
-            <p id="total-products-value" class="dashboard-items__total"></p>
+        <div class="dashboard-items__cart">
+            <h2 class="tittle">Produtos no carrinho</h2>
+            <p id="products-on-hold" class="dashboard-items__list">...</p>
+            <p id="total-products-value" class="dashboard-items__total">Total:</p>
         </div>
     </div>
 
