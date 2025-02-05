@@ -54,6 +54,7 @@ h2 {
     color: white;
     border: 5px solid rgb(8, 46, 182);
 }
+
 .dashboard-button-clean {
     background-color: rgb(10, 62, 249);
     color: white;
@@ -63,5 +64,10 @@ h2 {
 .dashboard-items__cart {
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 
+}
+
+.dashboard-items__list::before {
+    content: '- ';
 }
