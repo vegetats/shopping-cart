@@ -1,39 +1,55 @@
-const selectElement = document.getElementById('select-items');
-const productsOnCart = document.getElementById('products-on-cart');
+const selectElementHtml = document.getElementById('select-items');
+const inputQuantityHtml = document.getElementById('input-quantity');
+const totalValueHtml = document.getElementById('total-products-value');
+const cartHtml = document.getElementById('products-on-cart');
+const divItemsCart = document.getElementById('items-cart');
+const newUl = document.createElement('ul');
+divItemsCart.appendChild(newUl);
+const allIndividualValues = [];
+let individualValue = 0; 
+let totalValue = 0;
 
+const cartItems = []; 
 let foundItem = {};
 
 const options  = [
-    {value : 'item1', name : 'Air Pods 4', simbol : 'R$', price : 10},
-    {value : 'item2', name : 'MackBook Pro', simbol : 'R$', price : 20},
-    {value : 'item3', name : 'iPad Pro', simbol : 'R$', price : 30},
-    {value : 'item4', name : 'iPhone 15 Pro', simbol : 'R$', price : 40}
+    {value : 'item1', name : 'Air Pods 4', price : 10},
+    {value : 'item2', name : 'MackBook Pro', price : 20},
+    {value : 'item3', name : 'iPad Pro', price : 30},
+    {value : 'item4', name : 'iPhone 15 Pro', price : 40}
 ];
 
 
 function returnObjectItem() {
-    selectElement.addEventListener('change', function() {
+    selectElementHtml.addEventListener('change', function() {
   
-        const selectedItem = selectElement.value;
+        const selectedItem = selectElementHtml.value;
       
         foundItem = options.find(option => option.value === selectedItem);
-        console.log('------------------');
-        console.log({ response: foundItem });
-        console.log('------------------');
-
-
     });
 }
 
 returnObjectItem();
 
+
+
 function addToCart() {
-    const inputQuantity = document.getElementById('input-quantity').value;
-    const totalValue = document.getElementById('total-products-value');
-    productsOnCart.innerHTML = `${inputQuantity}  ${foundItem.name}`;
-    totalValue.textContent = `${foundItem.simbol} ${foundItem.price * inputQuantity}`;
+    
+    cartItems.push({
+        quantity: inputQuantityHtml.value,
+        name: foundItem.name,
+        price: foundItem.price,
+        value : foundItem.value
+    });
+    
+    const newLi = document.createElement('li');
+    newLi.textContent = `${inputQuantityHtml.value}  ${foundItem.name}`; 
+    newLi.setAttribute('id', foundItem.value);
+    newUl.appendChild(newLi);
 
+    individualValue = (inputQuantityHtml.value * foundItem.price);
+    allIndividualValues.push(individualValue);
+    totalValue = allIndividualValues.reduce((total, num) => total + num, 0); 
+    totalValueHtml.textContent = `R$ ${totalValue}`;  
 }
-
-
 
