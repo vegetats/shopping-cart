@@ -35,79 +35,92 @@ returnObjectItem();
 
 let currentQuantity; 
 let additionalQuantity; 
-const allIndividualValues = []; 
 
 function addToCart() {
     const selectedItemInDom = document.getElementById(selectedItem.id);
     if(selectedItemInDom) {
-    
-        additionalQuantity = Number(inputQuantityHtml.value) || 0;
-        currentQuantity = Number(selectedItemInDom.textContent.split(' ')[0]); 
         
-        let valuesForSum = (additionalQuantity * selectedItem.price); 
-        allIndividualValues.push({
-            price : valuesForSum,
+        currentQuantity = Number(selectedItemInDom.textContent.split(' ')[0]); 
+        additionalQuantity = Number(inputQuantityHtml.value) || 0;
+        
+        let valuesForSum = (currentQuantity + additionalQuantity) * selectedItem.price; 
+        
+        cartItems.push({
+            quantity: currentQuantity + inputQuantityHtml.value,
+            name: selectedItem.name,
+            price: selectedItem.price,
             id : selectedItem.id,
-            quantity : (additionalQuantity + currentQuantity)
+            total : valuesForSum
         });
         
+      
         selectedItemInDom.textContent = `${currentQuantity + additionalQuantity} ${selectedItem.name}`;
         const existingItem = cartItems.find(item => item.id == selectedItem.id);
         if(existingItem) existingItem.quantity += selectedItem.quantity; 
 
-
-        createButtonRemoveItems();
+        
+        // createButtonRemoveItems();
 
     } else {
-        cartItems.push({
-            quantity: inputQuantityHtml.value,
-            name: selectedItem.name,
-            price: selectedItem.price,
-            id : selectedItem.id
-        });
+        
     
         newLi = document.createElement('li');
         newLi.textContent = `${inputQuantityHtml.value}  ${selectedItem.name}`; 
         newLi.setAttribute('id', selectedItem.id);
         newUl.appendChild(newLi);
-        createButtonRemoveItems();
+
+        currentQuantity = Number(newLi.textContent.split('')[0]);
+        valuesForSum = selectedItem.price * inputQuantityHtml.value;
+        console.log('------------------');
+        console.log({ response: currentQuantity });
+        console.log('------------------');
+        cartItems.push({
+            quantity: currentQuantity,
+            name: selectedItem.name,
+            price: selectedItem.price,
+            id : selectedItem.id,
+            total : valuesForSum
+        });
+        // createButtonRemoveItems();
         
     
-        valuesForSum = selectedItem.price * inputQuantityHtml.value; 
-        allIndividualValues.push({
-            price : valuesForSum,
-            id : selectedItem.id,
-            quantity : 1
-        });
+         
+       
     }
     
     calculateTotalValue(); 
+
+    console.log('------------------');
+    console.log({ response: cartItems });
+    console.log('------------------');
    
 }
 
 let total = 0;
 function calculateTotalValue() {
     
-    total = allIndividualValues.reduce((acc, item) => acc + item.price, 0); 
+    total = cartItems.reduce((acc, item) => acc + item.total, 0); 
     totalValueHtml.textContent = `Valor Total R$ ${total}`;
 
 }
 
-function createButtonRemoveItems() {
-    const buttonRemoveItem = document.createElement('button');
-    buttonRemoveItem.textContent = 'Remover un';
-    newLi.appendChild(buttonRemoveItem); 
-    buttonRemoveItem.onclick = function () { 
-        // allIndividualValues.filter(item => item.id === selectedItem.id)
-        // .map(allIndividualValues = {
-        //     price : valuesForSum,
-        //     id : selectedItem.id,
-        //     quantity : 
-        // })
+// function createButtonRemoveItems() {
+//     const buttonRemoveItem = document.createElement('button');
+//     buttonRemoveItem.textContent = 'Remover un';
+//     newLi.appendChild(buttonRemoveItem); 
+//     buttonRemoveItem.onclick = function () { 
+//         const iditemToDelete = cartItems.filter(item => item.id === selectedItem.id);
+//         const ulArray = newUl.children;
+//         const itemToDelete = ulArray.namedItem(iditemToDelete);
+       
+        
+        
+        
+        
 
-    }
+//     }
           
-}
+// }
 
 
 
