@@ -7,9 +7,6 @@ const newUl = document.createElement('ul');
 divItemsCart.appendChild(newUl);
 let newLi;
 
-
-let item;
-
 const cartItems = []; 
 let selectedItem = {};
 
@@ -21,80 +18,38 @@ const options  = [
 ];
 
 
-function returnObjectItem() {
-    selectElementHtml.addEventListener('change', function() { // * consertar
-  
-        item = selectElementHtml.value;
-      
-        selectedItem = options.find(option => option.id == item);
-    });
-}
-
-returnObjectItem();
-
-
 let currentQuantity; 
 let additionalQuantity; 
 
+
 function addToCart() {
-    const selectedItemInDom = document.getElementById(selectedItem.id);
-    if(selectedItemInDom) {
-        
-        currentQuantity = Number(selectedItemInDom.textContent.split(' ')[0]); 
-        additionalQuantity = Number(inputQuantityHtml.value) || 0;
-        
-        let valuesForSum = (currentQuantity + additionalQuantity) * selectedItem.price; 
-        
-        cartItems.push({
-            quantity: currentQuantity + inputQuantityHtml.value,
-            name: selectedItem.name,
-            price: selectedItem.price,
-            id : selectedItem.id,
-            total : valuesForSum
-        });
-        
-      
-        selectedItemInDom.textContent = `${currentQuantity + additionalQuantity} ${selectedItem.name}`;
-        const existingItem = cartItems.find(item => item.id == selectedItem.id);
-        if(existingItem) existingItem.quantity += selectedItem.quantity; 
-
-        
-        // createButtonRemoveItems();
-
+    selectedItem = options.find(option => option.id == selectElementHtml.value);
+    const item =  cartItems.find(item => item.id == selectedItem.id);
+    if(item) {
+        additionalQuantity = +inputQuantityHtml.value || 0;
+        item.quantity += additionalQuantity;
+        item.total = item.quantity * item.price;
+        document.getElementById(selectedItem.id).textContent = `${item.quantity} ${selectedItem.name}`;
     } else {
-        
-    
-        newLi = document.createElement('li');
-        newLi.textContent = `${inputQuantityHtml.value}  ${selectedItem.name}`; 
-        newLi.setAttribute('id', selectedItem.id);
-        newUl.appendChild(newLi);
+        genereteNewLi();
+        identifyQuantity();
 
-        currentQuantity = Number(newLi.textContent.split('')[0]);
-        valuesForSum = selectedItem.price * inputQuantityHtml.value;
-        console.log('------------------');
-        console.log({ response: currentQuantity });
-        console.log('------------------');
         cartItems.push({
             quantity: currentQuantity,
             name: selectedItem.name,
             price: selectedItem.price,
             id : selectedItem.id,
             total : valuesForSum
-        });
-        // createButtonRemoveItems();
-        
-    
-         
-       
+        });    
     }
-    
+    createButtonRemoveItems(); 
     calculateTotalValue(); 
-
     console.log('------------------');
     console.log({ response: cartItems });
-    console.log('------------------');
-   
+    console.log('------------------');  
+    
 }
+
 
 let total = 0;
 function calculateTotalValue() {
@@ -104,23 +59,45 @@ function calculateTotalValue() {
 
 }
 
-// function createButtonRemoveItems() {
-//     const buttonRemoveItem = document.createElement('button');
-//     buttonRemoveItem.textContent = 'Remover un';
-//     newLi.appendChild(buttonRemoveItem); 
-//     buttonRemoveItem.onclick = function () { 
-//         const iditemToDelete = cartItems.filter(item => item.id === selectedItem.id);
-//         const ulArray = newUl.children;
-//         const itemToDelete = ulArray.namedItem(iditemToDelete);
-       
-        
-        
-        
-        
+function genereteNewLi() {
+    newLi = document.createElement('li');
+    newLi.textContent = `${inputQuantityHtml.value}  ${selectedItem.name}`; 
+    newLi.setAttribute('id', selectedItem.id);
+    newUl.appendChild(newLi);
+}
 
-//     }
+function identifyQuantity() {
+    currentQuantity = +newLi.textContent.split(' ')[0];
+    valuesForSum = selectedItem.price * inputQuantityHtml.value;
+}
+
+function createButtonRemoveItems() {
+    const buttonRemoveItem = document.createElement('button');
+    buttonRemoveItem.textContent = 'Remover un';
+    buttonRemoveItem.setAttribute('id', selectedItem.id); 
+    newLi.appendChild(buttonRemoveItem); 
+    
+    buttonRemoveItem.onclick = function () { 
+        const itemToRemove = cartItems.find(item => item.id == buttonRemoveItem.id);
+        if(itemToRemove.quantity > 1) {
+            itemToRemove.quantity = itemToRemove.quantity - 1;
+            
+        } else {
+            const indexOfItem = cartItems.indexOf(item => item.id == buttonRemoveItem.id); 
+            cartItems.splice(indexOfItem, 1); 
+        }
+        
+        
+        
+        console.log('------------------');
+        console.log({ response: itemToRemove });
+        console.log('------------------');
+        console.log('------------------');
+        console.log({ response: cartItems });
+        console.log('------------------');
+    }
           
-// }
+}
 
 
 
