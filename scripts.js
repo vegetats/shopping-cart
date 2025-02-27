@@ -6,6 +6,7 @@ const divItemsCart = document.getElementById('items-cart');
 const newUl = document.createElement('ul');
 divItemsCart.appendChild(newUl);
 let newLi;
+let newSpan;
 
 const cartItems = []; 
 let selectedItem = {};
@@ -40,28 +41,25 @@ function addToCart() {
             price: selectedItem.price,
             id : selectedItem.id,
             total : valuesForSum
-        });    
+        }); 
+        createButtonRemoveItems();   
     }
-    createButtonRemoveItems(); 
-    calculateTotalValue(); 
-    console.log('------------------');
-    console.log({ response: cartItems });
-    console.log('------------------');  
-    
+    calculateTotalValue();   
 }
 
-
-let total = 0;
-function calculateTotalValue() {
-    
-    total = cartItems.reduce((acc, item) => acc + item.total, 0); 
+function cleanCart() {
+    cartItems.splice(0, cartItems.length);
+    newUl.replaceChildren();
+    total = 0; 
     totalValueHtml.textContent = `Valor Total R$ ${total}`;
-
 }
 
 function genereteNewLi() {
     newLi = document.createElement('li');
-    newLi.textContent = `${inputQuantityHtml.value}  ${selectedItem.name}`; 
+    newSpan = document.createElement('span'); 
+    newSpan.textContent = `${inputQuantityHtml.value}  ${selectedItem.name}`; 
+    newSpan.setAttribute('id', `span-${selectedItem.id}`); 
+    newLi.appendChild(newSpan); 
     newLi.setAttribute('id', selectedItem.id);
     newUl.appendChild(newLi);
 }
@@ -73,42 +71,48 @@ function identifyQuantity() {
 
 function createButtonRemoveItems() {
     const buttonRemoveItem = document.createElement('button');
-    buttonRemoveItem.textContent = 'Remover un';
+    buttonRemoveItem.textContent = 'Remover un'
     buttonRemoveItem.setAttribute('id', selectedItem.id); 
-    newLi.appendChild(buttonRemoveItem); 
+    document.getElementById(selectedItem.id).appendChild(buttonRemoveItem);
+
+    const buttonRemoveLi = document.createElement('button');
+    buttonRemoveLi.textContent = 'Remover todos';
+    buttonRemoveLi.setAttribute('id', selectedItem.id); 
+    document.getElementById(selectedItem.id).appendChild(buttonRemoveLi);
     
     buttonRemoveItem.onclick = function () { 
-        const itemToRemove = cartItems.find(item => item.id == buttonRemoveItem.id);
-        if(itemToRemove.quantity > 1) {
-            itemToRemove.quantity = itemToRemove.quantity - 1;
-            
+        const itemToDecrease = cartItems.find(item => item.id == buttonRemoveItem.id);
+        if(itemToDecrease.quantity > 1) {
+            itemToDecrease.quantity = itemToDecrease.quantity - 1; 
+            document.getElementById(`span-${buttonRemoveItem.id}`).textContent = `${itemToDecrease.quantity} ${itemToDecrease.name}`;    
+            total = total - itemToDecrease.price; 
+            totalValueHtml.textContent = `Valor Total R$ ${total}`;
         } else {
-            const indexOfItem = cartItems.indexOf(item => item.id == buttonRemoveItem.id); 
-            cartItems.splice(indexOfItem, 1); 
-        }
-        
-        
-        
-        console.log('------------------');
-        console.log({ response: itemToRemove });
-        console.log('------------------');
-        console.log('------------------');
-        console.log({ response: cartItems });
-        console.log('------------------');
+            const indexOfItemToRemove = cartItems.indexOf(itemToDecrease, 0);
+            cartItems.splice(indexOfItemToRemove, 1);
+            newUl.removeChild(document.getElementById(itemToDecrease.id));
+            total = total - itemToDecrease.price;
+            totalValueHtml.textContent = `Valor Total R$ ${total}`;   
+        }   
     }
-          
+    buttonRemoveLi.onclick = function () {
+        const itemToRemove = cartItems.find(item => item.id == buttonRemoveItem.id);
+        const indexOfItemToRemove = cartItems.indexOf(itemToRemove, 0);
+        cartItems.splice(indexOfItemToRemove, 1);
+        newUl.removeChild(document.getElementById(itemToRemove.id));
+        total = total - itemToRemove.price * itemToRemove.quantity;
+        totalValueHtml.textContent = `Valor Total R$ ${total}`;   
+    }         
+}
+
+let total = 0;
+function calculateTotalValue() {
+    total = cartItems.reduce((acc, item) => acc + item.total, 0); 
+    totalValueHtml.textContent = `Valor Total R$ ${total}`;
 }
 
 
-
-
-
-    // const buttonRemoveLi = document.createElement('button');
-    // buttonRemoveLi.textContent = 'Remover todos';
-    // newLi.appendChild(buttonRemoveLi);
-    // buttonRemoveLi.onclick = function () {
-
-    // }
+    
 
 
 
