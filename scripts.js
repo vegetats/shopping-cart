@@ -30,7 +30,7 @@ function addToCart() {
         additionalQuantity = +inputQuantityHtml.value || 0;
         item.quantity += additionalQuantity;
         item.total = item.quantity * item.price;
-        document.getElementById(selectedItem.id).textContent = `${item.quantity} ${selectedItem.name}`;
+        document.getElementById(`span-${item.id}`).textContent = `${item.quantity} ${item.name}`;
     } else {
         genereteNewLi();
         identifyQuantity();
@@ -69,6 +69,13 @@ function identifyQuantity() {
     valuesForSum = selectedItem.price * inputQuantityHtml.value;
 }
 
+
+let total = 0;
+function calculateTotalValue() {
+    total = cartItems.reduce((acc, item) => acc + item.total, 0); 
+    totalValueHtml.textContent = `Valor Total R$ ${total}`;
+}
+
 function createButtonRemoveItems() {
     const buttonRemoveItem = document.createElement('button');
     buttonRemoveItem.textContent = 'Remover un'
@@ -95,8 +102,9 @@ function createButtonRemoveItems() {
             totalValueHtml.textContent = `Valor Total R$ ${total}`;   
         }   
     }
+
     buttonRemoveLi.onclick = function () {
-        const itemToRemove = cartItems.find(item => item.id == buttonRemoveItem.id);
+        const itemToRemove = cartItems.find(item => item.id == buttonRemoveLi.id);
         const indexOfItemToRemove = cartItems.indexOf(itemToRemove, 0);
         cartItems.splice(indexOfItemToRemove, 1);
         newUl.removeChild(document.getElementById(itemToRemove.id));
@@ -104,14 +112,6 @@ function createButtonRemoveItems() {
         totalValueHtml.textContent = `Valor Total R$ ${total}`;   
     }         
 }
-
-let total = 0;
-function calculateTotalValue() {
-    total = cartItems.reduce((acc, item) => acc + item.total, 0); 
-    totalValueHtml.textContent = `Valor Total R$ ${total}`;
-}
-
-
     
 
 
